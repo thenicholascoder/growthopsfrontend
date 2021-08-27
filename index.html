@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js" integrity="sha512-bZS47S7sPOxkjU/4Bt0zrhEtWx0y0CRkhEp8IckzK+ltifIIE9EMIMTuT/mEzoIMewUINruDBIR/jJnbguonqQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@600&display=swap');
+        *{
+            margin: 0;
+            padding: 0;
+        }
+
+        *:active {
+          outline: none;
+        }
+        .col-sm-4 {
+          box-shadow: 0 0 5px 1px #eee;
+          width: calc(33.33% - 16.65px);
+        }
+
+        @media (max-width: 768px) {
+            .col-sm-4 {
+              width: 100%;
+            }
+          }
+
+        .navbar {
+          padding: 0 2vw;
+          background-color: #d21045;
+          font-family: 'Oswald', sans-serif;
+        }
+
+        .navbar--img {
+          color: white; 
+          height: 4vh; 
+          margin-right: 5vw;
+          margin-left: 25px;
+        }
+
+        .nav-link {
+            color: white;
+        }
+        .nav-item {
+            width: 80px;
+            margin: 0 25px;
+        }
+        .section1 {
+          background-color: #faf9f4;
+        }
+        .section1--title {
+          text-align: center; 
+          color: #444; 
+          margin: auto; 
+          height: 100%; 
+          padding: 1vh 0;
+        }
+        hr {
+          margin: 25px 0;
+        }
+        .section2 {
+          padding: 2vh 10vw;
+        }
+        .convertBtn {
+          background-color: #d21045; border: 1px solid #d21045; color: white; padding: 2px 20px;
+        }
+
+        .manager-details {
+          font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+  <div id="app">
+    <nav class="navbar navbar-expand-lg">
+      <a class="navbar-brand" href="#">
+          <img class="navbar--img" src="./assets/logo.png" alt="">
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon">
+          <svg viewBox="0 0 100 80" width="20" height="20" style="fill: white;" >
+            <rect width="100" height="20"></rect>
+            <rect y="30" width="100" height="20"></rect>
+            <rect y="60" width="100" height="20"></rect>
+          </svg></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="#" style="font-style: Oswald">OUR PRODUCTS</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">ABOUT US</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">LIVE BETTER</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">CLAIMS & SUPPORT</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link" href="#">MY ACCOUNT</a>
+            </li>
+        </ul>
+      </div>
+    </nav>
+    <section class="section1">
+      <h1 class="section1--title">DISTRICT MANAGER</h1>
+    </section>
+    <section class="section2">
+      <div>
+        <label for="age"><strong>Filter By Age</strong></label><br>
+        <select v-model="ageFilterValue" name="age" id="age">
+          <option selected value="all">All</option>
+          <option value="20andbelow">20 and below</option>
+          <option value="21to39">21 to 39</option>
+          <option value="40andabove">40 and above</option>
+        </select>
+      </div>
+      <hr>
+      <div>
+        <div class="container">
+          <div class="row" style="column-gap: 25px; row-gap: 25px;">
+            <div  v-for="(manager, i) in managers" class="col-sm-4" style=" padding: 30px;">
+              <div class="row">
+                <div class="col-4">
+                  <img src="./assets/userphoto.png" style="height: 80px; width: auto;" alt="">
+                </div>
+                <div class="col-8">
+                  <h5><strong>{{ manager.name | upper }}</strong></h5>
+                  <div class="manager-details"><span>Email: <strong>{{ manager.email }}</strong></span></div>
+                  <div class="manager-details"><span>Mobile: <strong>{{ manager.phone }}</strong></span></div>
+                  <div class="manager-details"><span>Company: <strong>{{ manager.company }}</strong></span></div>
+                  <div class="manager-details"><span>Address: <strong>{{ manager.address.street }} {{ manager.address.suite }} {{ manager.address.cityy }} {{ manager.address.zipcode }}</strong></span></div>
+                  <div class="manager-details"><span>Website: <strong>{{ manager.website }}</strong></span></div>
+                  <div class="manager-details"><span>Age: <strong>{{ manager.age }}</strong></span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <hr>
+      <div>
+        <label for="date"><strong>Date</strong></label><br>
+        <input v-model="date" type="date" name="date">
+        <button class="convertBtn" @click="convertDate()">CONVERT</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        message: 'Hello Vue!',
+        ageFilterOption: "all",
+        managers: [],
+        date: null
+      },
+      filters: {
+       // Filter definitions
+        upper(value) {
+            return value.toUpperCase();
+        }
+      },
+      methods: {
+        showManagers(filter) {
+          axios.get('http://www.mocky.io/v2/5d73bf3d3300003733081869')
+          .then((response) => {
+
+            this.managers = response.data.map(x => this.filterManagers(x, filter)).filter(element => {
+              return element !== undefined;
+            })
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+        },
+        filterManagers(data, ageFilterOption) {
+          if(ageFilterOption === "all") {
+            return data
+          } else if (ageFilterOption === "20andbelow" && data.age <= 20) {
+            return data
+          } else if (ageFilterOption === "20andbelow" && data.age <= 20) {
+            return data
+          } else if (ageFilterOption === "21to39" && data.age >= 21 && data.age <= 39) {
+            return data
+          } else if (ageFilterOption === "40andabove" && data.age >= 40) {
+            return data
+          } else {}
+        },
+        convertDate() {
+          if (this.date === null) {
+            alert("Please choose a date")
+          } else {
+            alert(this.date)
+          }
+        },
+        countMe() {
+          for (let i=1; i<=100; i++) {
+            if(i % 3 == 0) {
+              console.log("Foo");
+            } else if (i % 5 == 0) {
+              console.log("Bar");
+            } else {
+              console.log(i);
+            }
+          }
+        }
+      },
+      mounted() {
+        this.showManagers(this.ageFilterOption)
+        this.countMe()
+      },
+      computed: {
+        ageFilterValue: {
+          get: function() {
+            return this.ageFilterOption
+          },
+          set: function(newValue) {
+            this.ageFilterOption = newValue
+            this.showManagers(newValue)
+          }
+        }
+      }
+    })
+  </script>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
